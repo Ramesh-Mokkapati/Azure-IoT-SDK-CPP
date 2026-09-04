@@ -35,7 +35,7 @@ jobs:
       - name: Bootstrap vcpkg and Restore Packages
         shell: powershell
         run: |
-          .\scripts\bootstrap-vcpkg.ps1
+          .\scripts\bootstrap-vcpkg.ps1 -SolutionDir "$PWD" -Triplet "x64-windows"
 
       - name: Build Visual Studio Solution
         shell: cmd
