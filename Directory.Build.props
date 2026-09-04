@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <VcpkgNugetVersion>1.5.0</VcpkgNugetVersion>
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
+    <ResolveNuGetPackages>false</ResolveNuGetPackages>
+    <VcpkgTriplet Condition="'$(Platform)'=='x64'">x64-windows</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(Platform)'=='Win32'">x86-windows</VcpkgTriplet>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)'==''">x64-windows</VcpkgTriplet>
+    <!--
+      Self-contained by default: vcpkg lives inside this repo (downloaded on first
+      build by Directory.Build.targets) so the solution can be built on a machine
+      that has never had vcpkg set up. If a VcpkgRoot environment variable is
+      already set (e.g. a shared team vcpkg instance), it takes precedence.
+    -->
+    <VcpkgRoot Condition="'$(VcpkgRoot)'==''">$(SolutionDir)vcpkg</VcpkgRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <VcpkgPackage Include="azure-iot-sdk-c" />
+  </ItemGroup>
+</Project>

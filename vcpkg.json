@@ -1,0 +1,7 @@
+{
+  "name": "azure-iot-samples",
+  "version-string": "1.0.0",
+  "dependencies": [
+    "azure-iot-sdk-c"
+  ]
+}

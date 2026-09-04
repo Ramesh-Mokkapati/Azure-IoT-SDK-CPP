@@ -1,0 +1,62 @@
+# Visual Studio
+.vs/
+*.VC.db
+*.VC.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]64/
+vcpkg/
+
+# C/C++ intermediate files
+*.obj
+*.iobj
+*.ipdb
+*.pch
+*.pdb
+*.ilk
+*.idb
+*.log
+*.tlog
+*.lastbuildstate
+
+# Visual C++ browse and IntelliSense
+*.opendb
+*.aps
+*.ncb
+*.sbr
+*.bsc
+ipch/
+
+# Test and coverage artifacts
+TestResults/
+*.coverage
+*.coveragexml
+
+# vcpkg artifacts
+vcpkg_installed/
+installed/
+buildtrees/
+packages/
+downloads/
+
+# CMake (if generated in-source)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+
+# Misc
+*.tmp
+*.cache
+*.bak
+*.orig

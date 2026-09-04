@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <!--
+    Runs before compilation on every build. If the Azure IoT SDK headers aren't
+    already present for the active triplet, this downloads a local copy of vcpkg
+    into the repo and installs the SDK, so a freshly-cloned copy of this solution
+    builds on a machine that has nothing pre-installed except Git and the VS C++
+    workload. The first build will be slow (it's building the SDK from source);
+    subsequent builds are instant because the check below short-circuits.
+  -->
+  <Target Name="BootstrapAzureIotSdk"
+          BeforeTargets="PrepareForBuild;ClCompile"
+          Condition="!Exists('$(VcpkgRoot)\installed\$(VcpkgTriplet)\include\azureiot\iothub.h')">
+    <Message Importance="high" Text="Azure IoT SDK not found for triplet $(VcpkgTriplet) -- downloading vcpkg and building the SDK now. This can take several minutes on the first build; subsequent builds will be fast." />
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\bootstrap-vcpkg.ps1&quot; -SolutionDir &quot;$(SolutionDir.TrimEnd(`\`))&quot; -Triplet $(VcpkgTriplet)" />
+  </Target>
+</Project>
