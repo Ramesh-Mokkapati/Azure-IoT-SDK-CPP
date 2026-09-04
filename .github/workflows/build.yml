@@ -1,0 +1,56 @@
+name: Build Azure IoT SDK C++ Samples
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build Solution (x64 Release)
+    runs-on: windows-latest
+
+    env:
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/.vcpkg-cache
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Create vcpkg cache directory
+        run: mkdir -p ${{ github.workspace }}/.vcpkg-cache
+
+      - name: Cache vcpkg Binary Cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.vcpkg-cache
+          key: ${{ runner.os }}-vcpkg-binary-${{ hashFiles('vcpkg.json') }}
+          restore-keys: |
+            ${{ runner.os }}-vcpkg-binary-
+
+      - name: Bootstrap vcpkg and Restore Packages
+        shell: powershell
+        run: |
+          .\scripts\bootstrap-vcpkg.ps1
+
+      - name: Build Visual Studio Solution
+        shell: cmd
+        run: |
+          msbuild "Azure IoT Examples.sln" /p:Configuration=Release /p:Platform=x64 /m
+
+      - name: Prepare Artifact Directory
+        shell: powershell
+        run: |
+          New-Item -ItemType Directory -Path .\build-output
+          Get-ChildItem -Path .\x64\Release\*.exe | Copy-Item -Destination .\build-output\
+
+      - name: Create ZIP Archive and Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Azure-IoT-CPP-Samples-x64-Release
+          path: .\build-output\
+          retention-days: 7
