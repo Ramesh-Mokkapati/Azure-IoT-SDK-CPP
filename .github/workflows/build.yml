@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
 
     env:
-      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/.vcpkg-cache
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\.vcpkg-cache
 
     steps:
       - name: Checkout Repository
@@ -22,7 +22,8 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Create vcpkg cache directory
-        run: mkdir -p ${{ github.workspace }}/.vcpkg-cache
+        shell: powershell
+        run: New-Item -ItemType Directory -Path "${{ github.workspace }}\.vcpkg-cache" -Force | Out-Null
 
       - name: Cache vcpkg Binary Cache
         uses: actions/cache@v4
@@ -40,13 +41,14 @@ jobs:
       - name: Build Visual Studio Solution
         shell: cmd
         run: |
-          msbuild "Azure IoT Examples.sln" /p:Configuration=Release /p:Platform=x64 /m
+          msbuild "Azure-Examples.sln" /p:Configuration=Release /p:Platform=x64 /m
 
       - name: Prepare Artifact Directory
         shell: powershell
         run: |
-          New-Item -ItemType Directory -Path .\build-output
-          Get-ChildItem -Path .\x64\Release\*.exe | Copy-Item -Destination .\build-output\
+          New-Item -ItemType Directory -Path .\build-output -Force | Out-Null
+          Get-ChildItem -Path .\x64\Release -Filter *.exe -File | Copy-Item -Destination .\build-output\ -Force
+          Get-ChildItem -Path .\x64\Release -Filter *.dll -File | Copy-Item -Destination .\build-output\ -Force
 
       - name: Create ZIP Archive and Upload Artifact
         uses: actions/upload-artifact@v4
