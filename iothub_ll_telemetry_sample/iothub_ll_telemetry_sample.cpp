@@ -357,7 +357,7 @@ private:
             }
         }
 
-        return "HostName=xxx-xxx-xxx.azure-devices.net;DeviceId=xxx-xxx-xxx;SharedAccessKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+        return "HostName=iot-rds-dev.azure-devices.net;DeviceId=rds-demo-RM01;SharedAccessKey=948Y0c+diqUUw7+onmRN5olP2HTAdj8N5gpBs4/TAGI=";
     }
 
     std::mutex clientMutex_;

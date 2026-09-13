@@ -10,8 +10,32 @@
   -->
   <Target Name="BootstrapAzureIotSdk"
           BeforeTargets="PrepareForBuild;ClCompile"
-          Condition="!Exists('$(VcpkgRoot)\installed\$(VcpkgTriplet)\include\azureiot\iothub.h')">
-    <Message Importance="high" Text="Azure IoT SDK not found for triplet $(VcpkgTriplet) -- downloading vcpkg and building the SDK now. This can take several minutes on the first build; subsequent builds will be fast." />
-    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(SolutionDir)scripts\bootstrap-vcpkg.ps1&quot; -SolutionDir &quot;$(SolutionDir.TrimEnd(`\`))&quot; -Triplet $(VcpkgTriplet)" />
+          Condition="!Exists('$(VcpkgRoot)\installed\$(VcpkgTriplet)\include\azureiot\iothub.h') Or !Exists('$(VcpkgRoot)\installed\$(VcpkgTriplet)\include\azure\storage\blobs\blob_container_client.hpp')">
+    <PropertyGroup>
+      <_BootstrapTriplet>$(VcpkgTriplet)</_BootstrapTriplet>
+      <_BootstrapTriplet Condition="'$(_BootstrapTriplet)'==''">x64-windows</_BootstrapTriplet>
+    </PropertyGroup>
+    <Message Importance="high" Text="Azure IoT SDK not found for triplet $(_BootstrapTriplet) -- downloading vcpkg and building the SDK now. This can take several minutes on the first build; subsequent builds will be fast." />
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(MSBuildThisFileDirectory)scripts\bootstrap-vcpkg.ps1&quot; -SolutionDir &quot;$(MSBuildThisFileDirectory.TrimEnd(`\`))&quot; -Triplet &quot;$(_BootstrapTriplet)&quot;" />
   </Target>
+  <ItemDefinitionGroup Condition="'$(MSBuildProjectName)'=='Blob_SAS_Upload_Example' and '$(Configuration)'=='Debug'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VcpkgRoot)\installed\$(VcpkgTriplet)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\lib\manual-link;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>rpcrt4.lib;ncrypt.lib;crypt32.lib;winhttp.lib;secur32.lib;ws2_32.lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(MSBuildProjectName)'=='Blob_SAS_Upload_Example' and '$(Configuration)'=='Release'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(VcpkgRoot)\installed\$(VcpkgTriplet)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(VcpkgRoot)\installed\$(VcpkgTriplet)\lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\lib\manual-link;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>rpcrt4.lib;ncrypt.lib;crypt32.lib;winhttp.lib;secur32.lib;ws2_32.lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
 </Project>
+

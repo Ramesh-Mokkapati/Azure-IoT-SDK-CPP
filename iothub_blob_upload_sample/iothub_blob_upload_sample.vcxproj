@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -81,6 +81,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\bin\azure-*.dll" "$(OutDir)" 2&gt;nul &amp; exit /b 0</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -95,6 +98,9 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(VcpkgRoot)\installed\$(VcpkgTriplet)\bin\azure-*.dll" "$(OutDir)" 2&gt;nul &amp; exit /b 0</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -110,6 +116,9 @@
       <AdditionalLibraryDirectories>$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\lib\manual-link;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>rpcrt4.lib;ncrypt.lib;crypt32.lib;winhttp.lib;secur32.lib;ws2_32.lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\bin\azure-*.dll" "$(OutDir)" 2&gt;nul &amp; exit /b 0</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -126,6 +135,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>rpcrt4.lib;ncrypt.lib;crypt32.lib;winhttp.lib;secur32.lib;ws2_32.lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(VcpkgRoot)\installed\$(VcpkgTriplet)\bin\azure-*.dll" "$(OutDir)" 2&gt;nul &amp; exit /b 0</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="iothub_blob_upload_sample.cpp" />

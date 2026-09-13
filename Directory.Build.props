@@ -17,5 +17,6 @@
   </PropertyGroup>
   <ItemGroup>
     <VcpkgPackage Include="azure-iot-sdk-c" />
+	<vcpkgPackage Include="azure-storage-blobs-cpp" />
   </ItemGroup>
 </Project>

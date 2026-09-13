@@ -18,7 +18,7 @@
 #include "iothubtransportmqtt.h"
 
 /* Paste in the your iothub connection string  */
-static const char* connectionString = "HostName=xxx-xxx-xxx.azure-devices.net;DeviceId=xxx-xxx-xxx;SharedAccessKey=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";;
+static const char* connectionString = "HostName=iot-rds-dev.azure-devices.net;DeviceId=rds-demo-RM01;SharedAccessKey=948Y0c+diqUUw7+onmRN5olP2HTAdj8N5gpBs4/TAGI=";
 
 class IotHubC2DSample
 {

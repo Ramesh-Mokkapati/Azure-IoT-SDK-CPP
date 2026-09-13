@@ -69,14 +69,15 @@ try {
         if ($LASTEXITCODE -ne 0) { Fail "vcpkg bootstrap failed." }
     }
 
-    # 4. Install the manifest's dependencies (azure-iot-sdk-c) for the requested triplet.
+    # 4. Install the manifest's dependencies for the requested triplet.
     #    Installing into vcpkg's own "installed" folder keeps the classic-mode layout
     #    ($(VcpkgRoot)\installed\<triplet>\...) that the .vcxproj files expect.
     $installRoot = Join-Path $vcpkgDir "installed"
-    $marker = Join-Path $installRoot "$Triplet\include\azureiot\iothub.h"
+    $iotMarker = Join-Path $installRoot "$Triplet\include\azureiot\iothub.h"
+    $blobMarker = Join-Path $installRoot "$Triplet\include\azure\storage\blobs\blob_container_client.hpp"
 
-    if (-not (Test-Path $marker)) {
-        Write-Host "==> Installing Azure IoT SDK (azure-iot-sdk-c) for triplet '$Triplet' -- this can take a while the first time ..."
+    if ((-not (Test-Path $iotMarker)) -or (-not (Test-Path $blobMarker))) {
+        Write-Host "==> Installing manifest dependencies for triplet '$Triplet' -- this can take a while the first time ..."
         & $vcpkgExe install `
             "--triplet=$Triplet" `
             "--x-manifest-root=$($SolutionDir.TrimEnd('\\'))" `
@@ -85,8 +86,8 @@ try {
         if ($LASTEXITCODE -ne 0) { Fail "vcpkg install failed." }
     }
 
-    if (-not (Test-Path $marker)) {
-        Fail "vcpkg install completed but iothub.h was not found at '$marker'. Check the vcpkg output above for errors."
+    if ((-not (Test-Path $iotMarker)) -or (-not (Test-Path $blobMarker))) {
+        Fail "vcpkg install completed but required headers were not found at '$iotMarker' and '$blobMarker'. Check the vcpkg output above for errors."
     }
 
     Write-Host "==> Azure IoT SDK is ready ($Triplet)."
