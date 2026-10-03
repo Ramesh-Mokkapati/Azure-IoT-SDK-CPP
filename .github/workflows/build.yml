@@ -16,17 +16,17 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.1.0
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2.0.0
+        uses: microsoft/setup-msbuild@v3
 
       - name: Create vcpkg cache directory
         shell: powershell
         run: New-Item -ItemType Directory -Path "${{ github.workspace }}\.vcpkg-cache" -Force | Out-Null
 
       - name: Cache vcpkg Binary Cache
-        uses: actions/cache@v4.2.3
+        uses: actions/cache@v5.1.0
         with:
           path: ${{ github.workspace }}/.vcpkg-cache
           key: ${{ runner.os }}-vcpkg-binary-${{ hashFiles('vcpkg.json') }}
@@ -59,7 +59,7 @@ jobs:
           Get-ChildItem -Path .\x64\Debug   -Filter *.dll -File | Copy-Item -Destination .\build-output\Debug\   -Force
 
       - name: Upload Combined Artifact
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: Azure-IoT-CPP-Samples-x64
           path: .\build-output\
