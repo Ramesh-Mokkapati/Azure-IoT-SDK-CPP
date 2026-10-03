@@ -44,6 +44,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -51,6 +52,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -117,7 +119,7 @@
       <AdditionalDependencies>rpcrt4.lib;ncrypt.lib;crypt32.lib;winhttp.lib;secur32.lib;ws2_32.lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\bin\azure-*.dll" "$(OutDir)" 2&gt;nul &amp; exit /b 0</Command>
+      <Command>xcopy /y /d "$(VcpkgRoot)\installed\$(VcpkgTriplet)\debug\bin\*.dll" "$(OutDir)" 2&gt;nul &amp; exit /b 0</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,7 +138,7 @@
       <AdditionalDependencies>rpcrt4.lib;ncrypt.lib;crypt32.lib;winhttp.lib;secur32.lib;ws2_32.lib;$(VcpkgRoot)\installed\$(VcpkgTriplet)\lib\*.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(VcpkgRoot)\installed\$(VcpkgTriplet)\bin\azure-*.dll" "$(OutDir)" 2&gt;nul &amp; exit /b 0</Command>
+      <Command>xcopy /y /d "$(VcpkgRoot)\installed\$(VcpkgTriplet)\bin\*.dll" "$(OutDir)" 2&gt;nul &amp; exit /b 0</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

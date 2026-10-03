@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build Solution (x64 Release)
+    name: Build Solution (x64 Debug + Release)
     runs-on: windows-latest
 
     env:
@@ -16,17 +16,17 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
+        uses: microsoft/setup-msbuild@v2.0.0
 
       - name: Create vcpkg cache directory
         shell: powershell
         run: New-Item -ItemType Directory -Path "${{ github.workspace }}\.vcpkg-cache" -Force | Out-Null
 
       - name: Cache vcpkg Binary Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v4.2.3
         with:
           path: ${{ github.workspace }}/.vcpkg-cache
           key: ${{ runner.os }}-vcpkg-binary-${{ hashFiles('vcpkg.json') }}
@@ -38,21 +38,29 @@ jobs:
         run: |
           .\scripts\bootstrap-vcpkg.ps1 -SolutionDir "$PWD" -Triplet "x64-windows"
 
-      - name: Build Visual Studio Solution
+      - name: Build Release
         shell: cmd
         run: |
           msbuild "Azure-Examples.sln" /p:Configuration=Release /p:Platform=x64 /m
 
+      - name: Build Debug
+        shell: cmd
+        run: |
+          msbuild "Azure-Examples.sln" /p:Configuration=Debug /p:Platform=x64 /m
+
       - name: Prepare Artifact Directory
         shell: powershell
         run: |
-          New-Item -ItemType Directory -Path .\build-output -Force | Out-Null
-          Get-ChildItem -Path .\x64\Release -Filter *.exe -File | Copy-Item -Destination .\build-output\ -Force
-          Get-ChildItem -Path .\x64\Release -Filter *.dll -File | Copy-Item -Destination .\build-output\ -Force
+          New-Item -ItemType Directory -Path .\build-output\Release -Force | Out-Null
+          New-Item -ItemType Directory -Path .\build-output\Debug   -Force | Out-Null
+          Get-ChildItem -Path .\x64\Release -Filter *.exe -File | Copy-Item -Destination .\build-output\Release\ -Force
+          Get-ChildItem -Path .\x64\Release -Filter *.dll -File | Copy-Item -Destination .\build-output\Release\ -Force
+          Get-ChildItem -Path .\x64\Debug   -Filter *.exe -File | Copy-Item -Destination .\build-output\Debug\   -Force
+          Get-ChildItem -Path .\x64\Debug   -Filter *.dll -File | Copy-Item -Destination .\build-output\Debug\   -Force
 
-      - name: Create ZIP Archive and Upload Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Combined Artifact
+        uses: actions/upload-artifact@v4.6.2
         with:
-          name: Azure-IoT-CPP-Samples-x64-Release
+          name: Azure-IoT-CPP-Samples-x64
           path: .\build-output\
           retention-days: 7
