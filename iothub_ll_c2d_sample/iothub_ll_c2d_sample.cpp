@@ -5,6 +5,7 @@
 // when writing production code.
 
 #include <cstdio>
+#include <string>
 #include <cstdlib>
 #include <cstdarg>
 
@@ -17,8 +18,17 @@
 
 #include "iothubtransportmqtt.h"
 
-/* Paste in the your iothub connection string  */
-static const char* connectionString = "HostName=iot-rds-dev.azure-devices.net;DeviceId=rds-demo-RM01;SharedAccessKey=948Y0c+diqUUw7+onmRN5olP2HTAdj8N5gpBs4/TAGI=";
+/* Device connection string, read from IOTHUB_DEVICE_CONNECTION_STRING (see README). */
+static std::string GetConnectionString()
+{
+    char buffer[2048] = {};
+    size_t written = 0;
+    if (getenv_s(&written, buffer, sizeof(buffer), "IOTHUB_DEVICE_CONNECTION_STRING") == 0 && written > 0)
+    {
+        return std::string(buffer);
+    }
+    return std::string();
+}
 
 class IotHubC2DSample
 {
@@ -36,8 +46,17 @@ public:
             return 1;
         }
 
+        const std::string connectionString = GetConnectionString();
+        if (connectionString.empty())
+        {
+            Log("ERROR", "IOTHUB_DEVICE_CONNECTION_STRING is not set.");
+            IoTHub_Deinit();
+            CloseLogging();
+            return 1;
+        }
+
         Log("INFO", "Creating IoTHub Device handle");
-        IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString, protocol);
+        IOTHUB_DEVICE_CLIENT_LL_HANDLE device_ll_handle = IoTHubDeviceClient_LL_CreateFromConnectionString(connectionString.c_str(), protocol);
 
         if (device_ll_handle == NULL)
         {

@@ -88,7 +88,7 @@ public:
         const std::string connectionString = GetConnectionString();
         if (connectionString.empty())
         {
-            Log("ERROR", "Connection string is empty.");
+            Log("ERROR", "IOTHUB_DEVICE_CONNECTION_STRING is not set.");
             CloseLogging();
             return false;
         }
@@ -357,7 +357,7 @@ private:
             }
         }
 
-        return "HostName=iot-rds-dev.azure-devices.net;DeviceId=rds-demo-RM01;SharedAccessKey=948Y0c+diqUUw7+onmRN5olP2HTAdj8N5gpBs4/TAGI=";
+        return std::string();
     }
 
     std::mutex clientMutex_;
